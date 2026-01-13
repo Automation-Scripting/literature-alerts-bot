@@ -1,0 +1,54 @@
+import os
+import feedparser
+import requests
+from datetime import datetime, timedelta, timezone
+
+# ========= CONFIG =========
+WEBHOOK_URL = os.environ["DISCORD_WEBHOOK_URL_QGP_DKL"]
+
+ARXIV_URL = (
+    "http://export.arxiv.org/api/query?"
+    "search_query=("
+        "abs:%22deep+kernel+learning%22"
+        "+OR+abs:%22deep+kernel%22"
+        "+OR+abs:%22neural+kernel%22"
+        "+OR+abs:%22learned+kernel%22"
+        "+OR+abs:%22kernel+learning%22"
+        "+OR+abs:%22deep+gaussian+process%22"
+        "+OR+abs:%22neural+gaussian+process%22"
+        "+OR+abs:%22deep+GP%22"
+        "+OR+abs:%22deep+kernel%22"
+    ")"
+    "&sortBy=submittedDate"
+    "&sortOrder=descending"
+    "&max_results=20"
+)
+
+# ========= FETCH =========
+feed = feedparser.parse(ARXIV_URL)
+yesterday = datetime.utcnow() - timedelta(days=1)
+
+papers = []
+for entry in feed.entries:
+    published = datetime.strptime(entry.published, "%Y-%m-%dT%H:%M:%SZ")
+    if published > yesterday:
+        papers.append(entry)
+
+if not papers:
+    exit(0)
+
+# ========= FORMAT MESSAGE =========
+lines = ["**arXiv qgp-bayesian-inference — novos papers (últimas 24h) - Limitado a 20 resultados**\n"]
+
+for p in papers:
+    title = p.title.replace("\n", " ")
+    link = p.link
+    lines.append(f"• **{title}**\n  {link}")
+
+message = "\n".join(lines)
+
+# ========= SEND =========
+requests.post(
+    WEBHOOK_URL,
+    json={"content": message}
+)
