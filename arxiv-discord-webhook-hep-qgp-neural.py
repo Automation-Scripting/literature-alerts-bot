@@ -44,7 +44,7 @@ if not papers:
     exit(0)
 
 # ========= FORMAT MESSAGE =========
-lines = ["**arXiv qgp-nn — novos papers (últimas 24h)**\n"]
+lines = ["**arXiv qgp-nn — novos papers (últimas 24h) - Limitado a 200 resultados**\n"]
 
 for p in papers:
     title = p.title.replace("\n", " ")

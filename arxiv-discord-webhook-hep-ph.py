@@ -32,7 +32,7 @@ if not papers:
     exit(0)
 
 # ========= FORMAT MESSAGE =========
-lines = ["**arXiv hep-ph — novos papers (últimas 24h)**\n"]
+lines = ["**arXiv hep-ph — novos papers (últimas 24h) - Limitado a 50 resultados**\n"]
 
 for p in papers:
     title = p.title.replace("\n", " ")

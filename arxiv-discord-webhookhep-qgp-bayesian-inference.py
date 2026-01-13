@@ -39,7 +39,7 @@ if not papers:
     exit(0)
 
 # ========= FORMAT MESSAGE =========
-lines = ["**arXiv qgp-bayesian-inference — novos papers (últimas 24h)**\n"]
+lines = ["**arXiv qgp-bayesian-inference — novos papers (últimas 24h) - Limitado a 20 resultados**\n"]
 
 for p in papers:
     title = p.title.replace("\n", " ")
