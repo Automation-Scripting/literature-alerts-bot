@@ -26,7 +26,7 @@ ARXIV_URL = (
 # ========= FETCH =========
 feed = feedparser.parse(ARXIV_URL)
 time_frame = int(os.getenv("TIME_FRAME", "1"))
-cutoff = datetime.utcnow() - timedelta(days=time_frame)
+cutoff = datetime.now(timezone.utc) - timedelta(days=time_frame)
 
 papers = []
 for entry in feed.entries:
