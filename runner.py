@@ -150,9 +150,9 @@ def run_topic(session: requests.Session, topic: Dict[str, Any], cutoff: Optional
     webhook_url = os.getenv(webhook_env, "").strip()
 
     print("\n============================================ Topic =============================================")
-    print(f"ID               : {topic_id}")
-    print(f"Title            : {title}")
-    print(f"Webhook env      : {webhook_env}")
+    print(f"ID                       : {topic_id}")
+    print(f"Title                    : {title}")
+    print(f"Webhook env              : {webhook_env}")
 
     if not webhook_url:
         print(f"  ⚠️  Skipping: env var '{webhook_env}' not set.")
@@ -172,18 +172,20 @@ def run_topic(session: requests.Session, topic: Dict[str, Any], cutoff: Optional
     bozo = getattr(feed, "bozo", None)
     bozo_exc = getattr(feed, "bozo_exception", None) if bozo else None
 
-    print(f"TIME_FRAME            : {TIME_FRAME_RAW}")
+    print(f"TIME_FRAME               : {TIME_FRAME_RAW}")
     if cutoff is None:
-        print("Cutoff (UTC)           : (no date filtering)")
+        print("Cutoff (UTC)              : (no date filtering)")   
     else:
-        print(f"Cutoff (UTC)          : {cutoff.isoformat()}")
-    print(f"HTTP fetch status     : {status}")
-    print(f"bozo                  : {bozo}")
+        print(f"Cutoff (UTC)             : {cutoff.isoformat()}")
+        
+    print(f"HTTP fetch status        : {status}")
+    print(f"bozo                     : {bozo}")
     if bozo_exc:
-        print(f"bozo_exception    : {bozo_exc}")
-    print(f"Fetched entries       : {total_fetched}")
-    print(f"Total results on arXiv: {total_available}")
-    print(f"Query URL             : {arxiv_url}")
+        print(f"bozo_exception           : {bozo_exc}")
+
+    print(f"Fetched entries          : {total_fetched}")
+    print(f"Total results on arXiv   : {total_available}")
+    print(f"Query URL                : {arxiv_url}")
 
     # If arXiv returned no entries, something is likely wrong (query too strict / API issue / parsing)
     if total_fetched == 0:
@@ -215,6 +217,7 @@ def run_topic(session: requests.Session, topic: Dict[str, Any], cutoff: Optional
     if skipped_bad_date:
         print(f"Skipped (bad dates)      : {skipped_bad_date}")
 
+
     if not papers:
         print("(No articles in the selected time window. Nothing to post.)")
         return
@@ -223,8 +226,7 @@ def run_topic(session: requests.Session, topic: Dict[str, Any], cutoff: Optional
     print("\n---")
     post_mode = _choose_mode(len(papers))
 
-    print(f"Posting mode      : {post_mode}")
-
+    print(f"Posting mode             : {post_mode}")
     posted_ok = 0
     posted_fail = 0
 
