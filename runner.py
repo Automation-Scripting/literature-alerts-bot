@@ -292,13 +292,12 @@ def main() -> None:
     cutoff = _get_cutoff()
     topics = _load_topics(yaml_path)
 
-        
+    print("==============================\n")    
     print("arXiv → Discord runner")
     print(f"Topics file      : {yaml_path}")
     print(f"TIME_FRAME       : {TIME_FRAME_RAW}")
     print(f"MODE             : {MODE}")
     print(f"MAX_POSTS_TOPIC  : {MAX_POSTS_PER_TOPIC if MAX_POSTS_PER_TOPIC else '(no limit)'}")
-    print("==============================\n")
 
     with requests.Session() as session:
         for topic in topics:
