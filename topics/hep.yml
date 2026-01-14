@@ -6,7 +6,7 @@ topics:
 
   - id: qgp_baryogenesis
     title: "Baryogenesis / leptogenesis (hep-ph + hep-th + astro-ph.CO + gr-qc)"
-    webhook_env: "DISCORD_WEBHOOK_URL_QGP_BARYOGENESIS"
+    webhook_env: "DISCORD_WEBHOOK_URL_BARYOGENESIS"
     arxiv_url: "https://export.arxiv.org/api/query?search_query=(cat:hep-ph+OR+cat:hep-th+OR+cat:astro-ph.CO+OR+cat:gr-qc)+AND+(abs:baryogenesis+OR+abs:%22baryon+asymmetry%22+OR+abs:%22matter+antimatter+asymmetry%22+OR+abs:leptogenesis+OR+abs:%22Sakharov+conditions%22)&sortBy=submittedDate&sortOrder=descending&max_results=200"
 
   - id: qgp_lfi
@@ -26,7 +26,7 @@ topics:
 
   - id: qgp_bayesian
     title: "QGP + Bayesian inference"
-    webhook_env: "DISCORD_WEBHOOK_URL_BAYESIAN_QGP"
+    webhook_env: "DISCORD_WEBHOOK_URL_QGP_BAYESIAN"
     arxiv_url: "https://export.arxiv.org/api/query?search_query=(cat:hep-ph+OR+cat:hep-lat+OR+cat:nucl-th)+AND+(abs:bayesian+OR+abs:%22Bayesian+inference%22+OR+abs:%22Bayesian+analysis%22)+AND+(abs:%22quark+gluon+plasma%22+OR+abs:QGP)&sortBy=submittedDate&sortOrder=descending&max_results=200"
 
   - id: qgp_dkl
