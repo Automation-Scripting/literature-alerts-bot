@@ -11,19 +11,9 @@ on:
         default: "all"
         type: string
       time_frame:
-        description: "Days back (default: 1)"
+        description: "Days back (default: 1) or 'all'"
         required: false
         default: "1"
-        type: string
-      backfill_days:
-        description: "Backfill window (overrides time_frame)"
-        required: false
-        default: ""
-        type: string
-      mode:
-        description: "Posting mode: per_paper | summary | auto"
-        required: false
-        default: "per_paper"
         type: string
 
 jobs:
@@ -33,15 +23,20 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
       - name: Install deps
         run: |
           python -m pip install --upgrade pip
           pip install feedparser requests pyyaml
 
-      - name: Run HEP/QGP topics via runner
+      - name: Run topics via runner
         env:
           TIME_FRAME: ${{ github.event.inputs.time_frame || '1' }}
-          MODE: ${{ github.event.inputs.mode || 'auto' }}
+          ONLY_TOPIC: ${{ github.event.inputs.only_topic || 'all' }}
 
           DISCORD_WEBHOOK_URL_HEPPH: ${{ secrets.HEP_PHENOMENOLOGY_HOOK }}
           DISCORD_WEBHOOK_URL_BARYOGENESIS: ${{ secrets.HEP_EARLY_UNIVERSE_BARYOGENESIS_HOOK }}

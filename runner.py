@@ -10,6 +10,7 @@
 #
 # Optional env (global):
 #   TIME_FRAME            = days back to include (default: 1) OR "all" to disable date filtering
+#   ONLY_TOPIC            = topic id to run (default: "all")
 #   MODE                  = "auto" | "per_paper" | "summary" (default: "auto")
 #   REQUEST_TIMEOUT       = HTTP timeout seconds (default: 20)
 #   POST_DELAY_SECONDS    = delay between per-paper posts (default: 0.4)
@@ -35,6 +36,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 # ========= COMMON (global) =========
 TIME_FRAME_RAW = os.getenv("TIME_FRAME", "1").strip().lower()   # "1", "7", "30", "360", "all"
+ONLY_TOPIC = os.getenv("ONLY_TOPIC", "all").strip()             # "all" or a topic id  # >>> CHANGED
 MODE = os.getenv("MODE", "auto").strip().lower()               # "auto" | "per_paper" | "summary"
 REQUEST_TIMEOUT = int(os.getenv("REQUEST_TIMEOUT", "20"))
 
@@ -43,6 +45,9 @@ MAX_RETRIES_429 = int(os.getenv("MAX_RETRIES_429", "8"))
 DISCORD_CHUNK_LIMIT = int(os.getenv("DISCORD_CHUNK_LIMIT", "1800"))
 
 MAX_POSTS_PER_TOPIC = int(os.getenv("MAX_POSTS_PER_TOPIC", "0"))  # 0 = no cap after time filter
+
+# Safety: if too many papers, force summary (prevents floods / 429)  # >>> CHANGED
+SUMMARY_THRESHOLD = int(os.getenv("SUMMARY_THRESHOLD", "50"))
 
 
 # ========= HELPERS =========
@@ -61,17 +66,21 @@ def _get_cutoff() -> Optional[datetime]:
     return datetime.now(timezone.utc) - timedelta(days=days)
 
 def _choose_mode(papers_count: int) -> str:
+    """
+    Mode selection with minimal surprise:
+    - If papers_count > SUMMARY_THRESHOLD => force "summary" (safety).
+    - Otherwise:
+        - If MODE is explicitly "per_paper" or "summary", respect it.
+        - If MODE == "auto", decide only by papers_count (NOT by days).
+    """
+    # Safety first
+    if papers_count > SUMMARY_THRESHOLD:
+        return "summary"
+
     if MODE in ("per_paper", "summary"):
         return MODE
-    # auto: big windows / many papers -> summary to avoid 429 rate limit
-    if TIME_FRAME_RAW == "all":
-        return "summary"
-    try:
-        days = int(TIME_FRAME_RAW)
-    except Exception:
-        days = 1
-    if days >= 30 or papers_count >= 30:
-        return "summary"
+
+    # auto: only volume decides (no days heuristic)  # >>> CHANGED
     return "per_paper"
 
 def _chunk_text(lines: List[str], limit: int) -> List[str]:
@@ -174,7 +183,7 @@ def run_topic(session: requests.Session, topic: Dict[str, Any], cutoff: Optional
 
     print(f"TIME_FRAME               : {TIME_FRAME_RAW}")
     if cutoff is None:
-        print("Cutoff (UTC)              : (no date filtering)")   
+        print("Cutoff (UTC)             : (no date filtering)")   # >>> CHANGED (spacing)
     else:
         print(f"Cutoff (UTC)             : {cutoff.isoformat()}")
 
@@ -215,7 +224,6 @@ def run_topic(session: requests.Session, topic: Dict[str, Any], cutoff: Optional
     if skipped_bad_date:
         print(f"Skipped (bad dates)      : {skipped_bad_date}")
 
-
     if not papers:
         print("(No articles in the selected time window. Nothing to post.)")
         return
@@ -223,7 +231,12 @@ def run_topic(session: requests.Session, topic: Dict[str, Any], cutoff: Optional
     # --- POST ---
     post_mode = _choose_mode(len(papers))
 
-    print(f"Posting mode             : {post_mode}")
+    # If safety forced summary, log it without changing your log shape too much  # >>> CHANGED
+    if (MODE in ("auto", "per_paper")) and post_mode == "summary" and len(papers) > SUMMARY_THRESHOLD:
+        print(f"Posting mode             : summary (forced: {len(papers)} > {SUMMARY_THRESHOLD})")
+    else:
+        print(f"Posting mode             : {post_mode}")
+
     posted_ok = 0
     posted_fail = 0
 
@@ -278,7 +291,6 @@ def run_topic(session: requests.Session, topic: Dict[str, Any], cutoff: Optional
 
     # --- SUMMARY ---
     print("---")
-
     print(f"Total results on arXiv   : {total_available}")
     print(f"Total fetched from arXiv : {total_fetched}")
     print(f"Passed time filter       : {len(papers)}")
@@ -295,11 +307,26 @@ def main() -> None:
     cutoff = _get_cutoff()
     topics = _load_topics(yaml_path)
 
-    print("================================================================================================\n")    
+    # Apply ONLY_TOPIC filtering (default: all)  # >>> CHANGED
+    if ONLY_TOPIC and ONLY_TOPIC.lower() != "all":
+        topics = [t for t in topics if str(t.get("id", "")).strip() == ONLY_TOPIC]
+        if not topics:
+            print("================================================================================================\n")
+            print("arXiv → Discord runner")
+            print(f"Topics file      : {yaml_path}")
+            print(f"TIME_FRAME       : {TIME_FRAME_RAW}")
+            print(f"MODE             : {MODE}")
+            print(f"ONLY_TOPIC       : {ONLY_TOPIC}")
+            print(f"MAX_POSTS_TOPIC  : {MAX_POSTS_PER_TOPIC if MAX_POSTS_PER_TOPIC else '(no limit)'}")
+            print("\n(No matching topic id found. Nothing to do.)")
+            sys.exit(0)
+
+    print("================================================================================================\n")
     print("arXiv → Discord runner")
     print(f"Topics file      : {yaml_path}")
     print(f"TIME_FRAME       : {TIME_FRAME_RAW}")
     print(f"MODE             : {MODE}")
+    print(f"ONLY_TOPIC       : {ONLY_TOPIC}")  # >>> CHANGED (small addition)
     print(f"MAX_POSTS_TOPIC  : {MAX_POSTS_PER_TOPIC if MAX_POSTS_PER_TOPIC else '(no limit)'}")
 
     with requests.Session() as session:
