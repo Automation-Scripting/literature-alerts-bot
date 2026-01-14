@@ -149,7 +149,7 @@ def run_topic(session: requests.Session, topic: Dict[str, Any], cutoff: Optional
 
     webhook_url = os.getenv(webhook_env, "").strip()
 
-    print("\n===== Topic =====")
+    print("\n=========== Topic ============")
     print(f"ID               : {topic_id}")
     print(f"Title            : {title}")
     print(f"Webhook env      : {webhook_env}")
@@ -171,19 +171,18 @@ def run_topic(session: requests.Session, topic: Dict[str, Any], cutoff: Optional
     bozo = getattr(feed, "bozo", None)
     bozo_exc = getattr(feed, "bozo_exception", None) if bozo else None
 
-    print("----- arXiv fetch -----")
-    print(f"Query URL         : {arxiv_url}")
-    print(f"TIME_FRAME        : {TIME_FRAME_RAW}")
+    print(f"TIME_FRAME            : {TIME_FRAME_RAW}")
     if cutoff is None:
-        print("Cutoff (UTC)      : (no date filtering)")
+        print("Cutoff (UTC)           : (no date filtering)")
     else:
-        print(f"Cutoff (UTC)      : {cutoff.isoformat()}")
-    print(f"HTTP status       : {status}")
-    print(f"bozo              : {bozo}")
+        print(f"Cutoff (UTC)          : {cutoff.isoformat()}")
+    print(f"HTTP status           : {status}")
+    print(f"bozo                  : {bozo}")
     if bozo_exc:
         print(f"bozo_exception    : {bozo_exc}")
-    print(f"Fetched entries   : {total_fetched}")
+    print(f"Fetched entries       : {total_fetched}")
     print(f"Total results on arXiv: {total_available}")
+    print(f"Query URL             : {arxiv_url}")
 
     # If arXiv returned no entries, something is likely wrong (query too strict / API issue / parsing)
     if total_fetched == 0:
@@ -210,7 +209,6 @@ def run_topic(session: requests.Session, topic: Dict[str, Any], cutoff: Optional
     if MAX_POSTS_PER_TOPIC > 0 and len(papers) > MAX_POSTS_PER_TOPIC:
         papers = papers[:MAX_POSTS_PER_TOPIC]
 
-    print("----- filtering -----")
     print(f"Entries after time filter: {len(papers)}")
     if skipped_bad_date:
         print(f"Skipped (bad dates)      : {skipped_bad_date}")
@@ -221,7 +219,7 @@ def run_topic(session: requests.Session, topic: Dict[str, Any], cutoff: Optional
 
     # --- POST ---
     post_mode = _choose_mode(len(papers))
-    print("----- posting -----")
+
     print(f"Posting mode      : {post_mode}")
 
     posted_ok = 0
@@ -277,7 +275,7 @@ def run_topic(session: requests.Session, topic: Dict[str, Any], cutoff: Optional
             time.sleep(POST_DELAY_SECONDS)
 
     # --- SUMMARY ---
-    print("----- topic summary -----")
+    print("---------- summary -----------")
     print(f"Total results on arXiv    : {total_available}")
     print(f"Total fetched from arXiv  : {total_fetched}")
     print(f"Passed time filter        : {len(papers)}")
@@ -294,7 +292,7 @@ def main() -> None:
     cutoff = _get_cutoff()
     topics = _load_topics(yaml_path)
 
-    print("\n==============================")
+        
     print("arXiv → Discord runner")
     print(f"Topics file      : {yaml_path}")
     print(f"TIME_FRAME       : {TIME_FRAME_RAW}")
