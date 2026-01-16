@@ -12,11 +12,11 @@ Em cada tópico no arquivo YML (topics/hep.yml), contém a query de busca a ser 
 <img width="1271" height="152" alt="image" src="https://github.com/user-attachments/assets/24e0199b-5f7f-4332-b37e-39dadf2e2941" />
 
 ### **No Discord: para obter o valor desta variável (URL) do post:**
-#### **Selecione um Canal de destino e acesse as configurações deste canal em Settings:**
+### **Selecione um Canal de destino e acesse as configurações deste canal em Settings:**
 <img width="380" height="51" alt="image" src="https://github.com/user-attachments/assets/3215b6d8-578c-4012-a7c7-ff61bf22e1e6" />
-#### **Em Settings, clique em Integrations:**
+### **Em Settings, clique em Integrations:**
 <img width="272" height="187" alt="image" src="https://github.com/user-attachments/assets/d5d6e938-0fde-405b-9727-ebed44bc9108" />
-#### **Crie um webhook em New Webhook e copie a URL em Copy Webhook URL:**
+### **Crie um webhook em New Webhook e copie a URL em Copy Webhook URL:**
 <img width="703" height="355" alt="image" src="https://github.com/user-attachments/assets/de0dd352-429c-4bf3-8845-a60d8ea9f87d" />
 
 ### **No GitHub Repository -> Settings: criar uma secret com a URL destino do post em:**
