@@ -45,16 +45,16 @@ This variable determines **where** the message will be sent on Discord.
 
 This URL is the value that must be stored as a GitHub secret.
 
-### **1:**
+### **2:**
 <img width="380" height="51" alt="image" src="https://github.com/user-attachments/assets/3215b6d8-578c-4012-a7c7-ff61bf22e1e6" />
 
-### **2:**
+### **3:**
 <img width="272" height="187" alt="image" src="https://github.com/user-attachments/assets/d5d6e938-0fde-405b-9727-ebed44bc9108" />
 
-### **3:**
+### **4:**
 <img width="747" height="94" alt="image" src="https://github.com/user-attachments/assets/e60bfbbe-6c7e-41fd-871a-0564a805063b" />
 
-### **4:**
+### **5:**
 <img width="703" height="355" alt="image" src="https://github.com/user-attachments/assets/de0dd352-429c-4bf3-8845-a60d8ea9f87d" />
 
 ---
