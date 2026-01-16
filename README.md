@@ -134,8 +134,8 @@ Each run prints:
 - Posted messages
 - Errors (if any)
 
-<img width="1020" height="672" alt="image" src="https://github.com/user-attachments/assets/f3fcd50a-695e-4200-b6a0-ece44a385d01" />
 <img width="1004" height="541" alt="image" src="https://github.com/user-attachments/assets/2f4bba2e-fc4a-4158-aed5-f639d76e815b" />
+<img width="1020" height="672" alt="image" src="https://github.com/user-attachments/assets/f3fcd50a-695e-4200-b6a0-ece44a385d01" />
 
 ---
 
