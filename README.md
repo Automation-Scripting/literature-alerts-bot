@@ -44,4 +44,5 @@ Em cada tópico no arquivo YML (topics/hep.yml), contém a query de busca a ser 
 
 ## 4) Tópico
 Para incluir um novo tópico, basta criar um novo step no workflow, informando as secrets utilizadas e passando o tópico como parâmetro para o runner.
+
 <img width="893" height="343" alt="image" src="https://github.com/user-attachments/assets/ce736f07-f719-43f3-a61d-97ad48fa376e" />
